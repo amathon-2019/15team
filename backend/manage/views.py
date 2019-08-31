@@ -69,3 +69,4 @@ class KeyView(APIView):
     def post(self, request, format=None):
         key = models.Key.objects.create(user=request.user)
         return Response({"user": str(key)})
+
