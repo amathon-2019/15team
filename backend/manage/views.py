@@ -64,7 +64,7 @@ class KeyView(APIView):
 
     def get(self, request, format=None):
         serializer = serializers.KeySerializer(models.Key.objects.filter(user=request.user), many=True)
-        return Response(data=serializer.data)
+        return Response({"keyList":serializer.data})
 
     def post(self, request, format=None):
         key = models.Key.objects.create(user=request.user)
