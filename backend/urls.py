@@ -8,12 +8,9 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-
 urlpatterns = [
-    # http://localhost:8000/api/<router-viewsets>
-    path('api/', include('backend.api.urls')),
-
-    # http://localhost:8000/api/admin/
+    path('manage/', include('backend.manage.urls')),
+    path('api-<str:key>/', include('backend.api.urls')),
     path('api/admin/', admin.site.urls),
 ]
 
