@@ -58,11 +58,14 @@ class UserAPI(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
+
 class KeyView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, format=None):
         serializer = serializers.KeySerializer(models.Key.objects.filter(user=request.user), many=True)
         return Response(data=serializer.data)
 
     def post(self, request, format=None):
         key = models.Key.objects.create(user=request.user)
-        return Response({"user":key})
+        return Response({"user": str(key)})
