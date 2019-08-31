@@ -28,6 +28,7 @@
 
 <script>
 	import axios from "axios";
+	import config from "@/config";
 	export default {
 		data() {
 			return {
@@ -62,13 +63,14 @@
 				} else {
 					try {
 						const response = await axios.post(
-							`${process.env.SERVER_HOST}/manage/register`,
+							`${config.SERVER_HOST}/manage/register`,
 							{
 								username: this.id,
 								password: this.password
 							}
 						);
 						const data = response.data;
+
 						this.showSignUp = false;
 					} catch (error) {
 						if (error.response.status == 400) {
