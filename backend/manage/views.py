@@ -5,6 +5,8 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from . import models, serializers
+from rest_framework import status
+
 
 
 
@@ -63,17 +65,36 @@ class KeyView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        serializer = serializers.KeySerializer(models.Key.objects.get(user=request.user))
-        return Response({"keyList":serializer.data})
+        try:
+            serializer = serializers.KeySerializer(models.Key.objects.get(user=request.user))
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response("FAIL",status=status.HTTP_404_NOT_FOUND)
 
+    # create API key with specific count
+    # request.data {"count":int}
     def post(self, request, format=None):
-        key = models.Key.objects.create(user=request.user)
-        return Response({"user": str(key)})
+        try:
+            count = request.data["count"]
+            key = models.Key.objects.create(user=request.user, count=count)
+            serializer = serializers.KeySerializer(key)
+            return Response(data=serializer.data)
+        except:
+            return Response("FAIL",status=status.HTTP_400_BAD_REQUEST)
 
+    # update APIkey's count with specific number
+    # request.data {"count":int}
     def put(self, request, format=None):
-        count = request.data["count"]
-        key = models.Key.objects.get(user=request.user)
-        key.fill(count)
-        serializer = serializers.KeySerializer(key)
-        return Response(data=serializer.data)
+        try:
+            count = request.data["count"]
+            key = models.Key.objects.get(user=request.user)
+            if key.has_paid == True:
+                key.has_paid = False
+                key.fill(count)
+                serializer = serializers.KeySerializer(key)
+                return Response(data=serializer.data)
+            else:
+                return Response("FAIL - pay first", status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response("FAIL",data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
