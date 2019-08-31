@@ -25,6 +25,7 @@
 
 <script>
 	import axios from "axios";
+	import config from "@/config";
 	export default {
 		data() {
 			return {
@@ -47,16 +48,17 @@
 					return;
 				}
 				try {
+					console.log(config.SERVER_HOST);
 					const response = await axios.post(
-						`${process.env.SERVER_HOST}/manage/login`,
+						`${config.SERVER_HOST}/manage/login`,
 						{
 							username: this.id,
 							password: this.password
 						}
 					);
 					const data = response.data;
-					console.log(data);
-					// TODO: set Login
+					localStorage.setItem("token", data.token);
+					// set login
 					this.showSignIn = false;
 				} catch (error) {
 					if (error.response.status == 400) {
