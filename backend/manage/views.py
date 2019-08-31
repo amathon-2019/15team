@@ -5,6 +5,8 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from . import models, serializers
+from rest_framework import status
+
 
 
 
@@ -63,19 +65,28 @@ class KeyView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        serializer = serializers.KeySerializer(models.Key.objects.get(user=request.user))
-        return Response(data=serializer.data)
+        try:
+            serializer = serializers.KeySerializer(models.Key.objects.get(user=request.user))
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, format=None):
-        count = request.data["count"]
-        key = models.Key.objects.create(user=request.user, count=count)
-        serializer = serializers.KeySerializer(key)
-        return Response(data=serializer.data)
+        try:
+            count = request.data["count"]
+            key = models.Key.objects.create(user=request.user, count=count)
+            serializer = serializers.KeySerializer(key)
+            return Response(data=serializer.data)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
     def put(self, request, format=None):
-        count = request.data["count"]
-        key = models.Key.objects.get(user=request.user)
-        key.fill(count)
-        serializer = serializers.KeySerializer(key)
-        return Response(data=serializer.data)
-
+        try:
+            count = request.data["count"]
+            key = models.Key.objects.get(user=request.user)
+            key.fill(count)
+            serializer = serializers.KeySerializer(key)
+            return Response(data=serializer.data)
+        except:
+            return Response(data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
