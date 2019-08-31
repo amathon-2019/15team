@@ -10,8 +10,6 @@ RUN pip install -r requirements.txt
 
 ADD package.json /app/
 
-RUN npm install node-sass@4.11.0 --sass-binary-site=https://s3.ap-northeast-2.amazonaws.com/mindlogic-dev-packages
-
 RUN npm install
 
 COPY . .
