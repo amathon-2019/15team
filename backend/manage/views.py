@@ -69,7 +69,7 @@ class KeyView(APIView):
             serializer = serializers.KeySerializer(models.Key.objects.get(user=request.user))
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except:
-            return Response("FAIL",status=status.HTTP_404_NOT_FOUND)
+            return Response("FAIL//NO_SUCH_USER",status=status.HTTP_404_NOT_FOUND)
 
     # create API key with specific count
     # request.data {"count":int}
@@ -79,8 +79,10 @@ class KeyView(APIView):
             key = models.Key.objects.create(user=request.user, count=count)
             serializer = serializers.KeySerializer(key)
             return Response(data=serializer.data)
+        except KeyError:
+            return Response("FAIL//NO_REQUEST_DATA", status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response("FAIL",status=status.HTTP_400_BAD_REQUEST)
+            return Response("FAIL//KEY_ALREADY_EXIST",status=status.HTTP_400_BAD_REQUEST)
 
     # update APIkey's count with specific number
     # request.data {"count":int}
@@ -94,7 +96,8 @@ class KeyView(APIView):
                 serializer = serializers.KeySerializer(key)
                 return Response(data=serializer.data)
             else:
-                return Response("FAIL - pay first", status=status.HTTP_400_BAD_REQUEST)
+                return Response("FAIL//NEED_TO_PURCHASE", status=status.HTTP_400_BAD_REQUEST)
+        except KeyError:
+            return Response("FAIL//NO_REQUEST_DATA", status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response("FAIL",data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response("FAIL//NO_USER", status=status.HTTP_400_BAD_REQUEST)
