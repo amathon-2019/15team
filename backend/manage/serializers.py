@@ -42,3 +42,8 @@ class KeySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Key
         fields = '__all__'
+
+class CouponSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Coupon
+        fields = '__all__'
