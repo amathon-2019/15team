@@ -25,13 +25,22 @@ class KeyView(APIView):
     def post(self, request, format=None):
         key = models.Key.objects.create(user=request.user, count=1000)
         content = {
-            'user': str(key),  # `django.contrib.auth.User` instance.
+            'user': key,  # `django.contrib.auth.User` instance.
         }
         return Response(content)
 
 
 class MainView(APIView):
-    
-    def get(self, request, format=None):
-        print(request)
-        return Response()
+
+    def get(self, request, key, format=None):
+        try:
+            key = get_object_or_404(models.Key, api_key=key)
+            key.count -= 1
+            key.save()
+            # do some job
+            content = {
+                'user': str(key),  # `django.contrib.auth.User` instance.
+            }
+            return Response(content)
+        except:
+            return Response({"error":"invalid key"})
