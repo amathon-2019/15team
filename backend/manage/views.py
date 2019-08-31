@@ -89,6 +89,7 @@ class KeyView(APIView):
             count = request.data["count"]
             key = models.Key.objects.get(user=request.user)
             if key.has_paid == True:
+                key.has_paid = False
                 key.fill(count)
                 serializer = serializers.KeySerializer(key)
                 return Response(data=serializer.data)
