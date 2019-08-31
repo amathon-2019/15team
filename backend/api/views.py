@@ -18,7 +18,7 @@ class CouponView(APIView):
             serializer = serializers.CouponSerializer(models.Coupon.objects.filter(api_key = key), many=True)
             return Response(data=serializer.data)
         except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response("FAIL",status=status.HTTP_400_BAD_REQUEST)
 
     #generate coupon    
     def post(self, request, key):
@@ -31,7 +31,7 @@ class CouponView(APIView):
             serializer = serializers.CouponSerializer(coupon)
             return Response(data=serializer.data)
         except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response("FAIL",status=status.HTTP_404_NOT_FOUND)
 
     # use and delete coupon
     # request.data {"code":uuid}
@@ -41,6 +41,6 @@ class CouponView(APIView):
             coupon = Coupon.objects.get(code = code)
             serializer = serializers.CouponSerializer(coupon)
             coupon.delete()
-            return Response(status=status.HTTP_200_OK)
+            return Response("OK",status=status.HTTP_200_OK)
         except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response("FAIL",status=status.HTTP_404_NOT_FOUND)
