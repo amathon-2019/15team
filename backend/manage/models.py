@@ -5,7 +5,7 @@ import uuid
 
 class Key(models.Model):
     api_key = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    count = models.IntegerField(default=1000)
+    count = models.IntegerField()
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):

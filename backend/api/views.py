@@ -22,7 +22,8 @@ class CouponView(APIView):
         _key = Key.objects.get(api_key = key)
         coupon = Coupon.objects.create(api_key = _key)
         _key.used()
-        return Response({'coupon':str(coupon)})
+        serializer = serializers.CouponSerializer(coupon)
+        return Response(data=serializer.data)
 
     #use and delete coupon
     def delete(self, request, key):
