@@ -1,5 +1,4 @@
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
 from django.views.generic import TemplateView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,6 +10,7 @@ from . import models, serializers
 import secrets
 from django.shortcuts import get_object_or_404
 
+
 class RegistrationAPI(generics.GenericAPIView):
     serializer_class = serializers.CreateUserSerializer
 
@@ -18,6 +18,7 @@ class RegistrationAPI(generics.GenericAPIView):
         if len(request.data["username"]) < 6 or len(request.data["password"]) < 4:
             body = {"message": "short field"}
             return Response(body, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
@@ -29,7 +30,8 @@ class RegistrationAPI(generics.GenericAPIView):
                     "token": str(Token.objects.create(user=user)),
                 }
             )
-        return Response({'zz': 'zz'})
+        body = {"message": "Input doesn't valid for model"}
+        return Response(body, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginAPI(generics.GenericAPIView):
