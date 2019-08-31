@@ -88,8 +88,12 @@ class KeyView(APIView):
         try:
             count = request.data["count"]
             key = models.Key.objects.get(user=request.user)
-            key.fill(count)
-            serializer = serializers.KeySerializer(key)
-            return Response(data=serializer.data)
+            if key.has_paid == True:
+                key.fill(count)
+                serializer = serializers.KeySerializer(key)
+                return Response(data=serializer.data)
+            else:
+                return Response("FAIL - pay first", status=status.HTTP_400_BAD_REQUEST)
         except:
             return Response("FAIL",data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
