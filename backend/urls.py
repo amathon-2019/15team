@@ -13,14 +13,9 @@ from .api.views import index_view, KeyView
 
 
 urlpatterns = [
-
-    # http://localhost:8000/
     path('', index_view, name='index'),
-
-    # http://localhost:8000/api/<router-viewsets>
+    path('manage/' include('backend.auth.urls')),
     path('api-<str:key>/', include('backend.api.urls')),
-    path('key/',KeyView.as_view()),
-    # http://localhost:8000/api/admin/
     path('api/admin/', admin.site.urls),
 ]
 
