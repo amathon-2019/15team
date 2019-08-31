@@ -1,13 +1,8 @@
 from django.db import models
-from rest_framework import serializers
+from django.contrib.auth.models import User
 
 
-class Message(models.Model):
-    subject = models.CharField(max_length=200)
-    body = models.TextField()
-
-
-class MessageSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Message
-        fields = ('url', 'subject', 'body', 'pk')
+class Key(models.Model):
+    api_key = models.TextField(max_length=100)
+    count = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
