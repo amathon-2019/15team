@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(SETTINGS_DIR)
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'verybadsecret!!!'
+SECRET_KEY = 'gcr$j^h2@d@sd(f#-ihtv6*hg7qno$otw62^*rzcf0tk2wz&sb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',  # < Per Whitenoise, to disable built in
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'backend.api',
 ]
 
@@ -80,12 +81,16 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'Host' : 'amathon.chiesw6tjbhc.ap-northeast-2.rds.amazonaws.com',
-        'Port' : '3306',
-        'User' : os.environ.get('DB_USER'),
-        'Password': os.environ.get('DB_PASSWORD')
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            # 'read_default_file': os.path.join(SECRET_DIR, "mysql.cnf"),
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'" # strict mode 설정 추가
+        },
+        'NAME': 'amathon',
+        'HOST': 'amathon.chiesw6tjbhc.ap-northeast-2.rds.amazonaws.com',
+        'PORT': '3306',
+        'USER': os.environ.get('DB_USER', 'admin'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'amathon2019!')
     }
 }
 
