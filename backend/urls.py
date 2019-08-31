@@ -14,7 +14,7 @@ from .api.views import index_view, KeyView
 
 urlpatterns = [
     path('', index_view, name='index'),
-    path('manage/' include('backend.auth.urls')),
+    path('manage/' include('backend.manage.urls')),
     path('api-<str:key>/', include('backend.api.urls')),
     path('api/admin/', admin.site.urls),
 ]
