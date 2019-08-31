@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions, generics
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
+from rest_framework.views import APIView
 from . import models, serializers
 
 
@@ -58,7 +59,6 @@ class UserAPI(generics.RetrieveAPIView):
         return self.request.user
 
 class KeyView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
     def get(self, request, format=None):
         serializer = serializers.KeySerializer(models.Key.objects.filter(user=request.user), many=True)
         return Response(data=serializer.data)

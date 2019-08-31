@@ -8,13 +8,8 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from .api.views import index_view, KeyView
-
-
-
 urlpatterns = [
-    path('', index_view, name='index'),
-    path('manage/' include('backend.manage.urls')),
+    path('manage/', include('backend.manage.urls')),
     path('api-<str:key>/', include('backend.api.urls')),
     path('api/admin/', admin.site.urls),
 ]

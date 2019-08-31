@@ -6,7 +6,7 @@ from rest_framework import status, permissions, generics
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.views.decorators.cache import never_cache
-from . import models, serializers
+from backend.manage import models, serializers
 import secrets
 from django.shortcuts import get_object_or_404
 
