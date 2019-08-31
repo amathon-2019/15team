@@ -12,24 +12,35 @@ from backend.manage.models import Key,Coupon
 
 
 class CouponView(APIView):
-
+    
     def get(self, request, key):
-        serializer = serializers.CouponSerializer(models.Coupon.objects.filter(api_key = key), many=True)
-        return Response(data=serializer.data)
-        
+        try:
+            serializer = serializers.CouponSerializer(models.Coupon.objects.filter(api_key = key), many=True)
+            return Response(data=serializer.data)
+        except:
+            return Response("FAIL",status=status.HTTP_400_BAD_REQUEST)
+
     #generate coupon    
     def post(self, request, key):
-        _key = Key.objects.get(api_key = key)
-        coupon = Coupon.objects.create(api_key = _key)
-        _key.used()
-        return Response({'coupon':str(coupon)})
-
-    #use and delete coupon
-    def delete(self, request, key):
-        code = request.data['code']
         try:
-            coupon = Coupon.objects.get(code = code)
-            coupon.delete()
-            return Response({'rslt':"succ"})
+            _key = Key.objects.get(api_key = key)
+            if _key.count == 0:
+                Response(status=status.HTTP_400_BAD_REQUEST)
+            coupon = Coupon.objects.create(api_key = _key)
+            _key.used()
+            serializer = serializers.CouponSerializer(coupon)
+            return Response(data=serializer.data)
         except:
-            return Response({'rslt':"fail"})
+            return Response("FAIL",status=status.HTTP_404_NOT_FOUND)
+
+    # use and delete coupon
+    # request.data {"code":uuid}
+    def delete(self, request, key):
+        try:
+            code = request.data['code']
+            coupon = Coupon.objects.get(code = code)
+            serializer = serializers.CouponSerializer(coupon)
+            coupon.delete()
+            return Response("OK",status=status.HTTP_200_OK)
+        except:
+            return Response("FAIL",status=status.HTTP_404_NOT_FOUND)
