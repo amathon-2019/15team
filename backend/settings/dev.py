@@ -85,7 +85,7 @@ DATABASES = {
         'Host' : 'amathon.chiesw6tjbhc.ap-northeast-2.rds.amazonaws.com',
         'Port' : '3306',
         'User' : os.environ.get('DB_USER'),
-        'Password': os.environ.get('DB_PASSWORD'),
+        'Password': os.environ.get('DB_PASSWORD')
     }
 }
 
