@@ -8,7 +8,8 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.views.decorators.cache import never_cache
 from . import models, serializers
-
+import secrets
+from django.shortcuts import get_object_or_404
 
 class RegistrationAPI(generics.GenericAPIView):
     serializer_class = serializers.CreateUserSerializer
@@ -66,19 +67,24 @@ class KeyView(APIView):
         return Response(data=serializer.data)
 
     def post(self, request, format=None):
-        key = models.Key.objects.create(user=request.user,api_key=request.data["k"], count=request.data["c"])
+        key = models.Key.objects.create(user=request.user, count=1000)
         content = {
-            'user': str(key),  # `django.contrib.auth.User` instance.
+            'user': key,  # `django.contrib.auth.User` instance.
         }
         return Response(content)
 
 
 class MainView(APIView):
 
-    def get(self, request, format=None):
-        print(request)
-        return Response()
-
-
-# Serve Vue Application
-index_view = never_cache(TemplateView.as_view(template_name='index.html'))
+    def get(self, request, key, format=None):
+        try:
+            key = get_object_or_404(models.Key, api_key=key)
+            key.count -= 1
+            key.save()
+            # do some job
+            content = {
+                'user': str(key),  # `django.contrib.auth.User` instance.
+            }
+            return Response(content)
+        except:
+            return Response({"error":"invalid key"})

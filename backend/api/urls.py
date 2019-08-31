@@ -6,4 +6,5 @@ urlpatterns = [
     path('auth/register', views.RegistrationAPI.as_view()),
     path('auth/login', views.LoginAPI.as_view()),
     path('auth/user', views.UserAPI.as_view())
+    path('main/<str:key>', views.MainView.as_view())
 ]
