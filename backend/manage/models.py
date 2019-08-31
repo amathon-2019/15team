@@ -20,6 +20,10 @@ class Key(models.Model):
     def used(self):
         self.count -= 1
         self.save()
+    
+    def fill(self, count):
+        self.count += count
+        self.save()
 
 class Coupon(models.Model):
     code = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

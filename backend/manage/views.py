@@ -63,10 +63,17 @@ class KeyView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        serializer = serializers.KeySerializer(models.Key.objects.filter(user=request.user), many=True)
+        serializer = serializers.KeySerializer(models.Key.objects.get(user=request.user))
         return Response({"keyList":serializer.data})
 
     def post(self, request, format=None):
         key = models.Key.objects.create(user=request.user)
         return Response({"user": str(key)})
+
+    def put(self, request, format=None):
+        count = request.data["count"]
+        key = models.Key.objects.get(user=request.user)
+        key.fill(count)
+        serializer = serializers.KeySerializer(key)
+        return Response(data=serializer.data)
 

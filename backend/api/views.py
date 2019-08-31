@@ -21,13 +21,14 @@ class CouponView(APIView):
     def post(self, request, key):
         _key = Key.objects.get(api_key = key)
         coupon = Coupon.objects.create(api_key = _key)
+        _key.used()
         return Response({'coupon':str(coupon)})
 
     #use and delete coupon
     def delete(self, request, key):
+        code = request.data['code']
         try:
-            _key = Key.objects.get(api_key = key)
-            coupon = Coupon.objects.filter(api_key = _key)[0]
+            coupon = Coupon.objects.get(code = code)
             coupon.delete()
             return Response({'rslt':"succ"})
         except:
