@@ -7,32 +7,29 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.views.decorators.cache import never_cache
 from backend.manage import models, serializers
-import secrets
-from django.shortcuts import get_object_or_404
-
-def calcBMR(sex, weight, height, age):
-    if sex == "m":
-        return 655 + (9.6*weight) + (1.8*height) - (4.7*age)
-    else:
-        66 + (13.7*weight) + (5*height) - (6.8*age)
+from backend.manage.models import Key,Coupon
 
 
-class myAPI(APIView):
 
-    def get(self, request, key, format=None):
+class CouponView(APIView):
+
+    def get(self, request, key):
+        serializer = serializers.CouponSerializer(models.Coupon.objects.filter(api_key = key), many=True)
+        return Response(data=serializer.data)
+        
+    #generate coupon    
+    def post(self, request, key):
+        _key = Key.objects.get(api_key = key)
+        coupon = Coupon.objects.create(api_key = _key)
+        _key.used()
+        return Response({'coupon':str(coupon)})
+
+    #use and delete coupon
+    def delete(self, request, key):
+        code = request.data['code']
         try:
-            key = get_object_or_404(models.Key, api_key=key)
-            return Response({"count":key.count})
+            coupon = Coupon.objects.get(code = code)
+            coupon.delete()
+            return Response({'rslt':"succ"})
         except:
-            return Response({"error":"invalid key"})
-
-    def post(self, reqeust, key, format=None):
-
-        key = get_object_or_404(models.Key, api_key=key)
-        if key.is_valid():
-            data = reqeust.data
-            BMR = calcBMR(data["sex"], data["weight"],data["height"],data["age"])
-            key.used()
-            return Response({"BMR" : f' 숨만 쉬고 있어도 빅맥 {BMR//500}개까지는 살이 안찝니다.'})
-        else: 
-            return Response({"error":"count 0"})
+            return Response({'rslt':"fail"})
