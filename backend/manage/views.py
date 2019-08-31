@@ -71,6 +71,8 @@ class KeyView(APIView):
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # create API key with specific count
+    # request.data {"count":int}
     def post(self, request, format=None):
         try:
             count = request.data["count"]
@@ -80,7 +82,8 @@ class KeyView(APIView):
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
+    # update APIkey's count with specific number
+    # request.data {"count":int}
     def put(self, request, format=None):
         try:
             count = request.data["count"]

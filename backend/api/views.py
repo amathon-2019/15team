@@ -33,7 +33,8 @@ class CouponView(APIView):
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    #use and delete coupon
+    # use and delete coupon
+    # request.data {"code":uuid}
     def delete(self, request, key):
         try:
             code = request.data['code']
