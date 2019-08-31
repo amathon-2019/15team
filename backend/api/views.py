@@ -14,13 +14,18 @@ from backend.manage.models import Key,Coupon
 class CouponView(APIView):
     
     def get(self, request, key):
-        serializer = serializers.CouponSerializer(models.Coupon.objects.filter(api_key = key), many=True)
-        return Response(data=serializer.data)
-        
+        try:
+            serializer = serializers.CouponSerializer(models.Coupon.objects.filter(api_key = key), many=True)
+            return Response(data=serializer.data)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
     #generate coupon    
     def post(self, request, key):
         try:
             _key = Key.objects.get(api_key = key)
+            if _key.count == 0:
+                Response(status=status.HTTP_400_BAD_REQUEST)
             coupon = Coupon.objects.create(api_key = _key)
             _key.used()
             serializer = serializers.CouponSerializer(coupon)
@@ -30,8 +35,8 @@ class CouponView(APIView):
 
     #use and delete coupon
     def delete(self, request, key):
-        code = request.data['code']
         try:
+            code = request.data['code']
             coupon = Coupon.objects.get(code = code)
             serializer = serializers.CouponSerializer(coupon)
             coupon.delete()
