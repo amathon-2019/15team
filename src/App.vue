@@ -23,8 +23,10 @@
 			/>
 		</div>
 		<router-view />
-		<signIn :showSignIn="showSignIn"></signIn>
-		<signUp :showSignUp="showSignUp"></signUp>
+
+		<div :class="['alert-message', alertVisible? 'visible-box': 'invisible']">{{ alertMessage }}</div>
+		<signIn :showSignIn="showSignIn" v-on:showSignUp="showSignUp = true" v-on:showAlert="showAlert"></signIn>
+		<signUp :showSignUp="showSignUp" v-on:showAlert="showAlert"></signUp>
 		<div id="footer">
 			<div id="team15">
 				<a href="https://github.com/amathon-2019/15team" target="_blank">
@@ -52,9 +54,20 @@
 		},
 		data() {
 			return {
+				alertMessage: "",
+				alertVisible: false,
 				showSignIn: false,
 				showSignUp: false
 			};
+		},
+		methods: {
+			showAlert: function(code, message) {
+				this.alertMessage = message;
+				this.alertVisible = true;
+				setTimeout(() => {
+					this.alertVisible = false;
+				}, 5000);
+			}
 		}
 	};
 </script>
@@ -62,94 +75,94 @@
 
 <style>
 	@import "https://fonts.googleapis.com/css?family=Livvic&display=swap";
-	html,
-	body,
-	div,
-	span,
-	applet,
-	object,
-	iframe,
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6,
-	p,
-	blockquote,
-	pre,
-	a,
-	abbr,
-	acronym,
-	address,
-	big,
-	cite,
-	code,
-	del,
-	dfn,
-	em,
-	img,
-	ins,
-	kbd,
-	q,
-	s,
-	samp,
-	small,
-	strike,
-	strong,
-	sub,
-	sup,
-	tt,
-	var,
-	b,
-	u,
-	i,
-	center,
-	dl,
-	dt,
-	dd,
-	ol,
-	ul,
-	li,
-	fieldset,
-	form,
-	label,
-	legend,
-	table,
-	caption,
-	tbody,
-	tfoot,
-	thead,
-	tr,
-	th,
-	td,
-	article,
-	aside,
-	canvas,
-	details,
-	embed,
-	figure,
-	figcaption,
-	footer,
-	header,
-	hgroup,
-	menu,
-	nav,
-	output,
-	ruby,
-	section,
-	summary,
-	time,
-	mark,
-	audio,
-	video {
-		margin: 0;
-		padding: 0;
-		border: 0;
-		font-size: 100%;
-		font: inherit;
-		vertical-align: baseline;
-	}
+	/* html,
+																																												body,
+																																												div,
+																																												span,
+																																												applet,
+																																												object,
+																																												iframe,
+																																												h1,
+																																												h2,
+																																												h3,
+																																												h4,
+																																												h5,
+																																												h6,
+																																												p,
+																																												blockquote,
+																																												pre,
+																																												a,
+																																												abbr,
+																																												acronym,
+																																												address,
+																																												big,
+																																												cite,
+																																												code,
+																																												del,
+																																												dfn,
+																																												em,
+																																												img,
+																																												ins,
+																																												kbd,
+																																												q,
+																																												s,
+																																												samp,
+																																												small,
+																																												strike,
+																																												strong,
+																																												sub,
+																																												sup,
+																																												tt,
+																																												var,
+																																												b,
+																																												u,
+																																												i,
+																																												center,
+																																												dl,
+																																												dt,
+																																												dd,
+																																												ol,
+																																												ul,
+																																												li,
+																																												fieldset,
+																																												form,
+																																												label,
+																																												legend,
+																																												table,
+																																												caption,
+																																												tbody,
+																																												tfoot,
+																																												thead,
+																																												tr,
+																																												th,
+																																												td,
+																																												article,
+																																												aside,
+																																												canvas,
+																																												details,
+																																												embed,
+																																												figure,
+																																												figcaption,
+																																												footer,
+																																												header,
+																																												hgroup,
+																																												menu,
+																																												nav,
+																																												output,
+																																												ruby,
+																																												section,
+																																												summary,
+																																												time,
+																																												mark,
+																																												audio,
+																																												video {
+																																													margin: 0;
+																																													padding: 0;
+																																													border: 0;
+																																													font-size: 100%;
+																																													font: inherit;
+																																													vertical-align: baseline;
+																																												} */
 	#header,
 	#footer {
 		-moz-align-items: center;
@@ -216,5 +229,19 @@
 		margin: 30px 10px 0px 10px;
 		width: 30px;
 		height: 30px;
+	}
+	.alert-message {
+		position: fixed;
+		z-index: 1;
+		background-color: #ff5e42;
+		color: white;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+	}
+	.visible-box {
+	}
+	.invisible {
+		display: none;
 	}
 </style>
