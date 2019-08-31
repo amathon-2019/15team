@@ -7,7 +7,8 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from django.views.decorators.cache import never_cache
 from . import models, serializers
-
+import secrets
+from django.shortcuts import get_object_or_404
 
 
 
@@ -22,7 +23,7 @@ class KeyView(APIView):
         return Response(data=serializer.data)
 
     def post(self, request, format=None):
-        key = models.Key.objects.create(user=request.user,api_key=request.data["k"], count=request.data["c"])
+        key = models.Key.objects.create(user=request.user, count=1000)
         content = {
             'user': str(key),  # `django.contrib.auth.User` instance.
         }
@@ -30,7 +31,7 @@ class KeyView(APIView):
 
 
 class MainView(APIView):
-
+    
     def get(self, request, format=None):
         print(request)
         return Response()
