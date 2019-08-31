@@ -45,7 +45,7 @@
 
 <script>
 	import { setInterval } from "timers";
-	import config from "@/config";
+	import config from "../config";
 	import axios from "axios";
 	export default {
 		data() {
