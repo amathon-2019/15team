@@ -25,7 +25,7 @@ class CouponView(APIView):
         try:
             _key = Key.objects.get(api_key = key)
             if _key.count == 0:
-                Response("FAIL//COUNT_LIMIT",status=status.HTTP_400_BAD_REQUEST)
+                return Response("FAIL//COUNT_LIMIT",status=status.HTTP_400_BAD_REQUEST)
             coupon = Coupon.objects.create(api_key = _key)
             _key.used()
             serializer = serializers.CouponSerializer(coupon)
